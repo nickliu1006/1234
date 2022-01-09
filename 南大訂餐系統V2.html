@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>南大快餐</title>
+    <script src="http://www.gstatic.com/firebasejs/9.6.2/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://kit.fontawesome.com/e248dd48a8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"-->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100&family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <style>
+        body {background:white;}
+        .title{font:50px 標楷體;}
+        .smalltitle{font-size: 36px;font-family: 'Noto Sans TC', sans-serif;}
+        .word{font-size: 20px font-family: 'Open Sans'sans-serif}
+        .buttonsty{width:120px;height:40px; border:2px #00fa9a;border-radius:30px;30px;30px;30px; background-color:#00fa9a}
+    </style>
+</head>
+<body>
+    <img src='media/LOGO.png' width="100" height="100">    
+    <p class='smalltitle'>選擇餐點</p>
+    <ol>
+<li>排骨菜飯(NT$70):
+    <input type="number" id="one" value="0" style="margin:5px 10px 15px 20px"> 份</li>
+<li>雞腿菜飯(NT$80):
+    <input type="number" id="two" value="0" style="margin:5px 10px 15px 20px"> 份</li>
+<li>魚排菜飯(NT$85):
+    <input type="number" id="three" value="0" style="margin:5px 10px 15px 20px"> 份</li>
+<li>一大特餐(NT$80):
+    <input type="number" id="four" value="0" style="margin:5px 10px 15px 20px"> 份</li>
+<li>紅燒牛肉(NT$100):
+    <input type="number" id="five" value="0" style="margin:5px 10px 15px 12px"> 份</li>
+<li>生鮮魚片(NT$90):
+    <input type="number" id="six" value="0" style="margin:5px 10px 15px 20px"> 份</li>
+<li>咖哩雞塊(NT$70):
+    <input type="number" id="seven" value="0" style="margin:5px 10px 15px 20px"> 份</li>
+<li>扁魚白菜(NT$70):
+    <input type="number" id="eight" value="0" style="margin:5px 10px 15px 20px"> 份</li>
+</ol>
+<p>小計 <span id="subtotal">0</span>元</p>
+<button id="order"  style="background: #f05f5c; color: white; padding: 10px 20px; border-radius: 10px; margin-right: 10px;">訂購</button>
+<button id="cancel" style="background: #f05f5c; color: white; padding: 10px 20px; border-radius: 10px; margin-right: 10px;">清除</button>
+<a href="C:\Users\sjjob\Desktop\網頁\期末網站.html">主頁</a>
+<script> 
+    var subtotal = document.getElementById("subtotal");
+    var one = document.getElementById("one");
+    var two = document.getElementById("two");
+    var three = document.getElementById("three");
+    var four = document.getElementById("four");
+    var five = document.getElementById("five");
+    var six = document.getElementById("six");
+    var seven = document.getElementById("seven");
+    var eight = document.getElementById("eight");
+    var oneservings = 0 , twoservings = 0, threeservings = 0  , fourservings = 0  , fiveservings = 0  , sixservings = 0  , sevenservings = 0  , eightservings = 0    , money = 0;
+
+    document.getElementById("cancel").onclick = 
+        function(){
+            one.value = 0;
+            two.value = 0;
+            three.value = 0;
+            four.value = 0;
+            five.value = 0;
+            six.value = 0;
+            seven.value = 0;
+            eight.value = 0;
+            oneservings = 0;
+            twoservings = 0;
+            threeservings = 0;
+            fourservings = 0;
+            fiveservings = 0;
+            sixservings = 0;
+            sevenservings = 0;
+            eightservings = 0;
+        };
+    document.getElementById("order").onclick =
+        function(){
+            if(money==0) return;
+            var msg="";
+            if(oneservings > 0)
+                msg += "排骨菜飯" + oneservings + "份\n";
+            if(twoservings > 0)
+                msg += "雞腿菜飯" + twoservings + "份\n";
+            if(threeservings > 0)
+                msg += "魚排菜飯" + threeservings + "份\n";
+            if(fourservings > 0)
+                msg += "一大特餐" + fourservings + "份\n";
+            if(fiveservings > 0)
+                msg += "紅燒牛肉" + fiveservings + "份\n";
+            if(sixservings > 0)
+                msg += "生鮮魚片" + sixservings + "份\n";
+            if(sevenservings > 0)
+                msg += "咖哩雞塊" + sevenservings + "份\n";
+            if(eightservings > 0)
+                msg += "扁魚白菜" + eightservings + "份\n";
+
+            msg += "總共 " + (oneservings+twoservings+threeservings+fourservings+fiveservings+sixservings+sevenservings+eightservings) + " 份, "+ money + "元";
+            alert(msg);
+        };
+    one.addEventListener('change',calc);
+    two.addEventListener('change',calc);
+    three.addEventListener('change',calc);
+    four.addEventListener('change',calc);
+    five.addEventListener('change',calc);
+    six.addEventListener('change',calc);
+    seven.addEventListener('change',calc);
+    eight.addEventListener('change',calc);
+    function calc(){
+        console.log(this);
+
+        var servings = parseInt(this.value);
+
+        if(this==one) {
+            if( servings< 0)
+                this.value=oneservings;
+            else
+                oneservings=servings;
+        }
+        else if(this==two) {
+            if( servings< 0)
+                this.value=twoservings;
+            else
+                twoservings=servings;
+        }
+        else if(this==three) {
+            if( servings< 0)
+                this.value=threeservings;
+            else
+                threeservings=servings;
+        }
+        else if(this==four) {
+            if( servings< 0)
+                this.value=fourservings;
+            else
+                fourservings=servings;
+        }
+        else if(this==five) {
+            if( servings< 0)
+                this.value=fiveservings;
+            else
+                fiveservings=servings;
+        }
+        else if(this==six) {
+            if( servings< 0)
+                this.value=sixservings;
+            else
+                sixservings=servings;
+        }
+        else if(this==seven) {
+            if( servings< 0)
+                this.value=sevenservings;
+            else
+                sevenservings=servings;
+        }
+        else {
+            if(servings < 0)
+                this.value=eightservings;
+            else
+                eightservings=servings;
+        }
+        money = oneservings*70 + twoservings*80 + threeservings*85 + fourservings*80 + fiveservings*100 + sixservings*90 + sevenservings*70 + eightservings*70;
+        subtotal.innerHTML = money;
+
+    }
+</script>
+</body>
+</html>
